@@ -13,6 +13,9 @@ public class Player {
 		this.surname = surname;
 	}
 
+	public Player() {
+	}
+
 	public String getId() {
 		return id;
 	}

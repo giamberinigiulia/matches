@@ -1,0 +1,51 @@
+package com.giulia.giamberini.match.controller;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.giulia.giamberini.match.model.Player;
+import com.giulia.giamberini.match.repository.PlayerRepository;
+import com.giulia.giamberini.match.view.MatchesView;
+
+public class PlayerControllerTest {
+
+	@Mock
+	private PlayerRepository playerRepository;
+	
+	@Mock
+	private MatchesView matchesView;
+	
+	@InjectMocks
+	private PlayerController playerController;
+
+	private AutoCloseable closeable;
+
+	@Before
+	public void setup() {
+		closeable = MockitoAnnotations.openMocks(this);
+	}
+	
+	@After
+	public void releaseMocks() throws Exception {
+		closeable.close();
+	}
+	
+	@Test
+	public void testAllPlayers() {
+		List<Player> players = Arrays.asList(new Player());
+		when(playerRepository.findAll()).thenReturn(players);
+		playerController.allPlayers();
+		verify(matchesView).showAllPlayers(players);
+	}
+
+}
