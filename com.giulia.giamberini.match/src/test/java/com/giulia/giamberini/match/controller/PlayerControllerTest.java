@@ -1,5 +1,6 @@
 package com.giulia.giamberini.match.controller;
 
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -46,6 +48,16 @@ public class PlayerControllerTest {
 		when(playerRepository.findAll()).thenReturn(players);
 		playerController.allPlayers();
 		verify(matchesView).showAllPlayers(players);
+	}
+	
+	@Test
+	public void testNewPlayerIsAddedIfItIsNotAlreadyPresent() {
+		Player player = new Player("1", "name test","surname test");
+		when(playerRepository.findById("1")).thenReturn(null);
+		playerController.newPlayer(player);
+		InOrder inOrder = inOrder(playerRepository, matchesView);
+		inOrder.verify(playerRepository).save(player);
+		inOrder.verify(matchesView).playerAdded(player);
 	}
 
 }

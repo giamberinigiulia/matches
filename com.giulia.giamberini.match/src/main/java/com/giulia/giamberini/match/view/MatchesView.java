@@ -8,4 +8,6 @@ public interface MatchesView {
 
 	void showAllPlayers(List<Player> players);
 
+	void playerAdded(Player player);
+
 }
