@@ -10,4 +10,6 @@ public interface MatchesView {
 
 	void playerAdded(Player player);
 
+	void showError(String string, Player existingPlayer);
+
 }
