@@ -19,8 +19,8 @@ public class PlayerController {
 	}
 
 	public void newPlayer(Player player) {
-		// TODO Auto-generated method stub
-		
+		playerRepository.save(player);
+		matchesView.playerAdded(player);
 	}
 
 }
