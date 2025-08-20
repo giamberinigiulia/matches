@@ -19,6 +19,11 @@ public class PlayerController {
 	}
 
 	public void newPlayer(Player player) {
+		Player existingPlayer = playerRepository.findById(player.getId());
+		if (existingPlayer != null) {
+			matchesView.showError("Player already present with id " + existingPlayer.getId(), existingPlayer);
+			return;
+		}
 		playerRepository.save(player);
 		matchesView.playerAdded(player);
 	}
