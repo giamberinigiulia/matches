@@ -10,6 +10,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.testcontainers.containers.MongoDBContainer;
 
+import com.giulia.giamberini.match.model.Player;
 import com.giulia.giamberini.match.repository.PlayerRepositoryMongo;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
@@ -42,4 +43,22 @@ public class PlayerRepositoryMongoTest {
 		assertThat(playerRepository.findAll()).isEmpty();
 	}
 
+	@Test
+	public void testFindAllWhenThereAreElementInTheDaatbase() {
+		String testId1 = "1";
+		String testName1 = "test name";
+		String testSurname1 = "test surname";
+		insertPlayerInCollection(testId1, testName1, testSurname1);
+		
+		String testId2 = "2";
+		String testName2 = "another test name";
+		String testSurname2 = "another test surname";
+		insertPlayerInCollection(testId2, testName2, testSurname2);
+		
+		assertThat(playerRepository.findAll()).containsExactly(new Player(testId1,testName1,testSurname1), new Player(testId2,testName2,testSurname2));
+	}
+
+	private void insertPlayerInCollection(String testId1, String testName1, String testSurname1) {
+		playerCollection.insertOne(new Document("_id", testId1).append("name", testName1).append("surname", testSurname1));
+	}
 }
