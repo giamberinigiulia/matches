@@ -61,4 +61,9 @@ public class PlayerRepositoryMongoTest {
 	private void insertPlayerInCollection(String testId1, String testName1, String testSurname1) {
 		playerCollection.insertOne(new Document("_id", testId1).append("name", testName1).append("surname", testSurname1));
 	}
+	
+	@Test
+	public void testFindByIdWhenTHePlayerDoesntExistInTheDatabase() {
+		assertThat(playerRepository.findById("NotExistingID")).isNull();
+	}
 }
