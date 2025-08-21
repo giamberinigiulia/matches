@@ -1,5 +1,7 @@
 package com.giulia.giamberini.match.repository;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.bson.Document;
@@ -18,8 +20,7 @@ public class PlayerRepositoryMongo implements PlayerRepository {
 
 	@Override
 	public List<Player> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
