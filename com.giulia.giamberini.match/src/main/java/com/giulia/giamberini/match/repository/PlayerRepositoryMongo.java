@@ -1,8 +1,8 @@
 package com.giulia.giamberini.match.repository;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 
@@ -13,14 +13,16 @@ import com.mongodb.client.MongoCollection;
 public class PlayerRepositoryMongo implements PlayerRepository {
 
 	private MongoCollection<Document> playerCollection;
-	
+
 	public PlayerRepositoryMongo(MongoClient client, String dbName, String collectionName) {
 		playerCollection = client.getDatabase(dbName).getCollection(collectionName);
 	}
 
 	@Override
 	public List<Player> findAll() {
-		return Collections.emptyList();
+		return StreamSupport.stream(playerCollection.find().spliterator(), false)
+				.map(this::convertFromDocumentToPlayer)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -35,4 +37,8 @@ public class PlayerRepositoryMongo implements PlayerRepository {
 
 	}
 
+	private Player convertFromDocumentToPlayer(Document d) {
+		return new Player(d.getString("_id"), d.getString("name"), d.getString("surname"));
+
+	}
 }
