@@ -1,4 +1,4 @@
-package com.giulia.giamberini.match.repository;
+package com.giulia.giamberini.match.repository.mongo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,6 +7,7 @@ import java.util.stream.StreamSupport;
 import org.bson.Document;
 
 import com.giulia.giamberini.match.model.Player;
+import com.giulia.giamberini.match.repository.PlayerRepository;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;

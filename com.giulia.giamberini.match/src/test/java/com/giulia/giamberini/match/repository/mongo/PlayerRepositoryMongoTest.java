@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.giulia.giamberini.match.model.Player;
-import com.giulia.giamberini.match.repository.PlayerRepositoryMongo;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
