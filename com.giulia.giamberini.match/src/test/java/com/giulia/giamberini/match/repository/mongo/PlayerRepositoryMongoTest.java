@@ -1,6 +1,5 @@
 package com.giulia.giamberini.match.repository.mongo;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.Collectors;
@@ -21,26 +20,29 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 public class PlayerRepositoryMongoTest {
+
 	@ClassRule
 	public static MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
 	private MongoClient mongoClient;
 	private PlayerRepositoryMongo playerRepository;
 	private MongoCollection<Document> playerCollection;
+	private static final String DATABSE_NAME_TENNIS_MATCHES = "tennis_matches";
+	private static final String COLLECTION_NAME_PLAYERS = "players";
 
 	@Before
 	public void setUp() {
 		mongoClient = new MongoClient(new ServerAddress(mongo.getHost(), mongo.getFirstMappedPort()));
-		playerRepository = new PlayerRepositoryMongo(mongoClient, "tennis_matches", "players");
-		MongoDatabase database = mongoClient.getDatabase("tennis_matches");
+		playerRepository = new PlayerRepositoryMongo(mongoClient, DATABSE_NAME_TENNIS_MATCHES, COLLECTION_NAME_PLAYERS);
+		MongoDatabase database = mongoClient.getDatabase(DATABSE_NAME_TENNIS_MATCHES);
 		database.drop();
-		playerCollection = database.getCollection("players");
+		playerCollection = database.getCollection(COLLECTION_NAME_PLAYERS);
 	}
 
 	@After
 	public void tearDown() {
 		mongoClient.close();
 	}
-	
+
 	@Test
 	public void testFindAllWithNoElementInTheDatabase() {
 		assertThat(playerRepository.findAll()).isEmpty();
@@ -52,37 +54,41 @@ public class PlayerRepositoryMongoTest {
 		String testName1 = "test name";
 		String testSurname1 = "test surname";
 		insertPlayerInCollection(testId1, testName1, testSurname1);
-		
+
 		String testId2 = "2";
 		String testName2 = "another test name";
 		String testSurname2 = "another test surname";
 		insertPlayerInCollection(testId2, testName2, testSurname2);
-		
-		assertThat(playerRepository.findAll()).containsExactly(new Player(testId1,testName1,testSurname1), new Player(testId2,testName2,testSurname2));
+
+		assertThat(playerRepository.findAll()).containsExactly(new Player(testId1, testName1, testSurname1),
+				new Player(testId2, testName2, testSurname2));
 	}
 
 	private void insertPlayerInCollection(String testId1, String testName1, String testSurname1) {
-		playerCollection.insertOne(new Document("_id", testId1).append("name", testName1).append("surname", testSurname1));
+		playerCollection
+				.insertOne(new Document("_id", testId1).append("name", testName1).append("surname", testSurname1));
 	}
-	
+
 	@Test
 	public void testFindByIdWhenThePlayerDoesntExistInTheDatabase() {
 		assertThat(playerRepository.findById("NotExistingID")).isNull();
 	}
-	
+
 	@Test
-	public void testFindByIdWhenThePlayerSearchedIsPresentInTheDatabase() { //test that also if more than one player is saved, it retrieve the correct one
+	public void testFindByIdWhenThePlayerSearchedIsPresentInTheDatabase() { // test that also if more than one player is
+																			// saved, it retrieve the correct one
 		insertPlayerInCollection("1", "test name", "test surname");
 		insertPlayerInCollection("2", "another test name", "another test surname");
-		assertThat(playerRepository.findById("2")).isEqualTo(new Player("2", "another test name", "another test surname"));
+		assertThat(playerRepository.findById("2"))
+				.isEqualTo(new Player("2", "another test name", "another test surname"));
 	}
-	
+
 	@Test
 	public void testSavePlayerInTheDatabase() {
 		Player playerToBeSaved = new Player("1", "test name toBeSaved", "test surname toBeSaved");
 		playerRepository.save(playerToBeSaved);
 		assertThat(StreamSupport.stream(playerCollection.find().spliterator(), false)
-				.map(d -> new Player(d.getString("_id"), d.getString("name"),d.getString("surname")))
+				.map(d -> new Player(d.getString("_id"), d.getString("name"), d.getString("surname")))
 				.collect(Collectors.toList())).containsExactly(playerToBeSaved);
 	}
 }
