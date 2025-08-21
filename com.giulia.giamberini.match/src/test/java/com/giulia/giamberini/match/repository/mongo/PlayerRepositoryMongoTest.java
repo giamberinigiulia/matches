@@ -63,7 +63,14 @@ public class PlayerRepositoryMongoTest {
 	}
 	
 	@Test
-	public void testFindByIdWhenTHePlayerDoesntExistInTheDatabase() {
+	public void testFindByIdWhenThePlayerDoesntExistInTheDatabase() {
 		assertThat(playerRepository.findById("NotExistingID")).isNull();
+	}
+	
+	@Test
+	public void testFindByIdWhenThePlayerSearchedIsPresentInTheDatabase() { //test that also if more than one player is saved, it retrieve the correct one
+		insertPlayerInCollection("1", "test name", "test surname");
+		insertPlayerInCollection("2", "another test name", "another test surname");
+		assertThat(playerRepository.findById("2")).isEqualTo(new Player("2", "another test name", "another test surname"));
 	}
 }
