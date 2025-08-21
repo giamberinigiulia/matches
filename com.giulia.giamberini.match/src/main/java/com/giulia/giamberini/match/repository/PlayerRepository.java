@@ -8,7 +8,7 @@ public interface PlayerRepository {
 
 	List<Player> findAll();
 
-	Player findById(String string);
+	Player findById(String id);
 
 	void save(Player player);
 

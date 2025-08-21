@@ -9,6 +9,7 @@ import org.bson.Document;
 import com.giulia.giamberini.match.model.Player;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 
 public class PlayerRepositoryMongo implements PlayerRepository {
 
@@ -26,8 +27,11 @@ public class PlayerRepositoryMongo implements PlayerRepository {
 	}
 
 	@Override
-	public Player findById(String string) {
-		// TODO Auto-generated method stub
+	public Player findById(String id) {
+		Document retrievedPlayer = playerCollection.find(Filters.eq("_id",id)).first();
+		if (retrievedPlayer != null) {
+			return convertFromDocumentToPlayer(retrievedPlayer);
+		}
 		return null;
 	}
 
