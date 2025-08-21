@@ -37,8 +37,7 @@ public class PlayerRepositoryMongo implements PlayerRepository {
 
 	@Override
 	public void save(Player player) {
-		// TODO Auto-generated method stub
-
+		playerCollection.insertOne(new Document("_id", player.getId()).append("name", player.getName()).append("surname", player.getSurname()));
 	}
 
 	private Player convertFromDocumentToPlayer(Document d) {
