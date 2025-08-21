@@ -3,6 +3,9 @@ package com.giulia.giamberini.match.repository.mongo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -72,5 +75,14 @@ public class PlayerRepositoryMongoTest {
 		insertPlayerInCollection("1", "test name", "test surname");
 		insertPlayerInCollection("2", "another test name", "another test surname");
 		assertThat(playerRepository.findById("2")).isEqualTo(new Player("2", "another test name", "another test surname"));
+	}
+	
+	@Test
+	public void testSavePlayerInTheDatabase() {
+		Player playerToBeSaved = new Player("1", "test name toBeSaved", "test surname toBeSaved");
+		playerRepository.save(playerToBeSaved);
+		assertThat(StreamSupport.stream(playerCollection.find().spliterator(), false)
+				.map(d -> new Player(d.getString("_id"), d.getString("name"),d.getString("surname")))
+				.collect(Collectors.toList())).containsExactly(playerToBeSaved);
 	}
 }
