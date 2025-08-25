@@ -17,4 +17,6 @@ public interface MatchesView {
 
 	void matchAdded(Match match);
 
+	void showError(String string, Match matchAlreadyPresent);
+
 }

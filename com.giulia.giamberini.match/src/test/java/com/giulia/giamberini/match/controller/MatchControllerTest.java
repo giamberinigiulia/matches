@@ -1,7 +1,9 @@
 package com.giulia.giamberini.match.controller;
 
+import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -67,6 +69,20 @@ public class MatchControllerTest {
 		InOrder inOrder = inOrder(matchRepository, matchesView);
 		inOrder.verify(matchRepository).save(match);
 		inOrder.verify(matchesView).matchAdded(match);
+	}
+
+	@Test
+	public void testNewMatchIsNotAddedIfPlayersHaveAlreadyPlayedAgainstEachOtherOnTheSameDate() {
+		Player winner = new Player("1", "winner name", "winner surname");
+		Player loser = new Player("2", "loser name", "loser surname");
+		LocalDate dateOfTheMatch = LocalDate.of(2025, 07, 10);
+		Match matchAlreadyPresent = new Match(winner, loser, dateOfTheMatch);
+		when(matchRepository.findByMatchInfo(winner, loser, dateOfTheMatch)).thenReturn(matchAlreadyPresent);
+		Match newMatchToAdd = new Match(winner, loser, dateOfTheMatch);
+		matchController.newMatch(newMatchToAdd);
+		verify(matchesView).showError("Those players have already played against each other on the selected date",
+				matchAlreadyPresent);
+		verifyNoMoreInteractions(ignoreStubs(matchRepository));
 	}
 
 }
