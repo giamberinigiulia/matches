@@ -15,4 +15,6 @@ public interface MatchesView {
 
 	void showAllMatches(List<Match> matches);
 
+	void matchAdded(Match match);
+
 }

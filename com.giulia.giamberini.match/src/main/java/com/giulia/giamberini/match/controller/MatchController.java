@@ -1,7 +1,6 @@
 package com.giulia.giamberini.match.controller;
 
-import javax.swing.text.View;
-
+import com.giulia.giamberini.match.model.Match;
 import com.giulia.giamberini.match.repository.MatchRepository;
 import com.giulia.giamberini.match.view.MatchesView;
 
@@ -17,6 +16,11 @@ public class MatchController {
 
 	public void allMatches() {
 		matchesView.showAllMatches(matchRepository.findAll());
+	}
+
+	public void newMatch(Match match) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

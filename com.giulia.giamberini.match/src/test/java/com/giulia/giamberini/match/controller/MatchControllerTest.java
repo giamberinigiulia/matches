@@ -1,19 +1,23 @@
 package com.giulia.giamberini.match.controller;
 
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.giulia.giamberini.match.model.Match;
+import com.giulia.giamberini.match.model.Player;
 import com.giulia.giamberini.match.repository.MatchRepository;
 import com.giulia.giamberini.match.repository.PlayerRepository;
 import com.giulia.giamberini.match.view.MatchesView;
@@ -50,6 +54,19 @@ public class MatchControllerTest {
 		when(matchRepository.findAll()).thenReturn(matches);
 		matchController.allMatches();
 		verify(matchesView).showAllMatches(matches);
+	}
+
+	@Test
+	public void testNewMatchIsAddedIfNoMatchesAreAlreadyPresentWithThosePlayersInTheSameDate() {
+		Player winner = new Player("1", "winner name", "winner surname");
+		Player loser = new Player("2", "loser name", "loser surname");
+		LocalDate dateOfTheMatch = LocalDate.of(2025, 07, 10);
+		Match match = new Match(winner, loser, dateOfTheMatch);
+		when(matchRepository.findByMatchInfo(winner, loser, dateOfTheMatch)).thenReturn(null);
+		matchController.newMatch(match);
+		InOrder inOrder = inOrder(matchRepository, matchesView);
+		inOrder.verify(matchRepository).save(match);
+		inOrder.verify(matchesView).matchAdded(match);
 	}
 
 }
