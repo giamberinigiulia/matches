@@ -3,6 +3,8 @@ package com.giulia.giamberini.match.repository.mongo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
+
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +12,8 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.testcontainers.containers.MongoDBContainer;
 
+import com.giulia.giamberini.match.model.Match;
+import com.giulia.giamberini.match.model.Player;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
@@ -22,7 +26,7 @@ public class MatchRepositoryMongoTest {
 	private MongoClient mongoClient;
 	private MatchRepositoryMongo matchRepository;
 	private MongoCollection<Document> matchCollection;
-	
+
 	@Before
 	public void setUp() {
 		mongoClient = new MongoClient(new ServerAddress(mongo.getHost(), mongo.getFirstMappedPort()));
@@ -37,12 +41,28 @@ public class MatchRepositoryMongoTest {
 		mongoClient.close();
 	}
 
-	
 	@Test
 	public void testFindAllWithNoElementInTheDatabase() {
 		assertThat(matchRepository.findAll()).isEmpty();
 	}
-	
-	
+
+	@Test
+	public void testFindAllWhenThereAreElementsInTheDatabase() {
+		Player winner = new Player("1", "winner name", "winner surname");
+		Player loser = new Player("2", "loser name", "loser surname");
+		LocalDate firstMatchDate = LocalDate.of(2025, 07, 10);
+		LocalDate secondMatchDate = LocalDate.of(2025, 07, 15);
+
+		insertMatchInCollection(winner, loser, firstMatchDate);
+		insertMatchInCollection(winner, loser, secondMatchDate);
+
+		assertThat(matchRepository.findAll()).containsExactly(new Match(winner, loser, firstMatchDate),
+				new Match(winner, loser, secondMatchDate));
+	}
+
+	private void insertMatchInCollection(Player winner, Player loser, LocalDate matchDate) {
+		matchCollection.insertOne(new Document("winnerId", winner.getId()).append("loserId", loser.getId())
+				.append("date", matchDate));
+	}
 
 }
