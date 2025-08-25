@@ -15,9 +15,11 @@ import com.mongodb.client.MongoCollection;
 public class MatchRepositoryMongo implements MatchRepository {
 
 	private MongoCollection<Document> matchCollection;
+	private MongoCollection<Document> playerCollection;
 
-	public MatchRepositoryMongo(MongoClient client, String dbName, String collectionName) {
-		matchCollection = client.getDatabase(dbName).getCollection(collectionName);
+	public MatchRepositoryMongo(MongoClient client, String dbName, String matchCollectionName, String playerCollectionName) {
+		matchCollection = client.getDatabase(dbName).getCollection(matchCollectionName);
+		playerCollection = client.getDatabase(dbName).getCollection(playerCollectionName);
 	}
 
 	@Override

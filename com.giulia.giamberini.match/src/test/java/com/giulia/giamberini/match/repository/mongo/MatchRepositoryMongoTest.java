@@ -1,7 +1,6 @@
 package com.giulia.giamberini.match.repository.mongo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 
@@ -26,14 +25,16 @@ public class MatchRepositoryMongoTest {
 	private MongoClient mongoClient;
 	private MatchRepositoryMongo matchRepository;
 	private MongoCollection<Document> matchCollection;
+	private MongoCollection<Document> playerCollection;
 
 	@Before
 	public void setUp() {
 		mongoClient = new MongoClient(new ServerAddress(mongo.getHost(), mongo.getFirstMappedPort()));
-		matchRepository = new MatchRepositoryMongo(mongoClient, "tennis_matches", "matches");
+		matchRepository = new MatchRepositoryMongo(mongoClient, "tennis_matches", "matches", "players");
 		MongoDatabase database = mongoClient.getDatabase("tennis_matches");
 		database.drop();
 		matchCollection = database.getCollection("matches");
+		playerCollection = database.getCollection("players");
 	}
 
 	@After
@@ -50,6 +51,9 @@ public class MatchRepositoryMongoTest {
 	public void testFindAllWhenThereAreElementsInTheDatabase() {
 		Player winner = new Player("1", "winner name", "winner surname");
 		Player loser = new Player("2", "loser name", "loser surname");
+		insertPlayerInCollection(winner);
+		insertPlayerInCollection(loser);
+
 		LocalDate firstMatchDate = LocalDate.of(2025, 07, 10);
 		LocalDate secondMatchDate = LocalDate.of(2025, 07, 15);
 
@@ -60,9 +64,14 @@ public class MatchRepositoryMongoTest {
 				new Match(winner, loser, secondMatchDate));
 	}
 
+	private void insertPlayerInCollection(Player player) {
+		playerCollection.insertOne(new Document("_id", player.getId()).append("name", player.getName())
+				.append("surname", player.getSurname()));
+	}
+
 	private void insertMatchInCollection(Player winner, Player loser, LocalDate matchDate) {
-		matchCollection.insertOne(new Document("winnerId", winner.getId()).append("loserId", loser.getId())
-				.append("date", matchDate));
+		matchCollection.insertOne(
+				new Document("winnerId", winner.getId()).append("loserId", loser.getId()).append("date", matchDate));
 	}
 
 }
