@@ -2,6 +2,7 @@ package com.giulia.giamberini.match.view;
 
 import java.util.List;
 
+import com.giulia.giamberini.match.model.Match;
 import com.giulia.giamberini.match.model.Player;
 
 public interface MatchesView {
@@ -11,5 +12,7 @@ public interface MatchesView {
 	void playerAdded(Player player);
 
 	void showError(String string, Player existingPlayer);
+
+	void showAllMatches(List<Match> matches);
 
 }

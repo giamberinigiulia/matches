@@ -14,6 +14,9 @@ public class Match {
 		this.dateOfTheMatch = dateOfTheMatch;
 	}
 
+	public Match() {
+	}
+
 	public Player getWinenr() {
 		return winenr;
 	}
