@@ -1,6 +1,7 @@
 package com.giulia.giamberini.match.repository.mongo;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import org.bson.Document;
@@ -21,7 +22,7 @@ public class MatchRepositoryMongo implements MatchRepository {
 
 	@Override
 	public List<Match> findAll() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
