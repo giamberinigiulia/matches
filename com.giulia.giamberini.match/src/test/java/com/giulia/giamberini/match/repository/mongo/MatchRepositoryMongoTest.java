@@ -73,5 +73,24 @@ public class MatchRepositoryMongoTest {
 		matchCollection.insertOne(
 				new Document("winnerId", winner.getId()).append("loserId", loser.getId()).append("date", matchDate));
 	}
+	
+	@Test
+	public void testFindByMatchInfoWhenTheMatchDoesntExist() {
+		assertThat(matchRepository.findByMatchInfo(new Player(), new Player(), LocalDate.of(2025, 07, 10))).isNull();
+	}
+	
+	@Test
+	public void testFindByMatchInfoWhenTheMatchExistAndIsActuallyFormedAsGiven() {
+		Player winner = new Player("1", "winner name", "winner surname");
+		Player loser = new Player("2", "loser name", "loser surname");
+		insertPlayerInCollection(winner);
+		insertPlayerInCollection(loser);
+		LocalDate firstMatchDate = LocalDate.of(2025, 07, 10);
+		LocalDate secondMatchDate = LocalDate.of(2025, 07, 15);
+		insertMatchInCollection(winner, loser, firstMatchDate);
+		insertMatchInCollection(winner, loser, secondMatchDate);
+		
+		assertThat(matchRepository.findByMatchInfo(winner, loser, secondMatchDate)).isEqualTo(new Match(winner, loser, secondMatchDate));
+	}
 
 }
