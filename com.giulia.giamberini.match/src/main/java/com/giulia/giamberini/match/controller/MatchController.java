@@ -31,6 +31,10 @@ public class MatchController {
 	}
 
 	public void deleteMatch(Match matchToDelete) {
+		if (matchRepository.findByMatchInfo(matchToDelete.getWinner(), matchToDelete.getLoser(), matchToDelete.getDateOfTheMatch()) == null) {
+			matchesView.showError("No existing  match with selected winner, loser and date", matchToDelete);
+			return;
+		}
 		matchRepository.delete(matchToDelete.getWinner(), matchToDelete.getLoser(), matchToDelete.getDateOfTheMatch());
 		matchesView.matchRemoved(matchToDelete);
 	}
