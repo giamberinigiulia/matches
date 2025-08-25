@@ -19,8 +19,8 @@ public class MatchController {
 	}
 
 	public void newMatch(Match match) {
-		// TODO Auto-generated method stub
-		
+		matchRepository.save(match);
+		matchesView.matchAdded(match);
 	}
 
 }
