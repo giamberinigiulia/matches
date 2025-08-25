@@ -84,5 +84,19 @@ public class MatchControllerTest {
 				matchAlreadyPresent);
 		verifyNoMoreInteractions(ignoreStubs(matchRepository));
 	}
+	
+	@Test
+	public void testDeleteAMatchIfItIsPresent() {
+		Player winner = new Player("1", "winner name", "winner surname");
+		Player loser = new Player("2", "loser name", "loser surname");
+		LocalDate dateOfTheMatchToDelete = LocalDate.of(2025, 07, 10);
+		Match matchToDelete = new Match(winner, loser, dateOfTheMatchToDelete);
+		
+		when(matchRepository.findByMatchInfo(winner, loser, dateOfTheMatchToDelete)).thenReturn(matchToDelete);
+		matchController.deleteMatch(matchToDelete);
+		InOrder inOrder = inOrder(matchRepository, matchesView);
+		inOrder.verify(matchRepository).delete(winner, loser, dateOfTheMatchToDelete);
+		inOrder.verify(matchesView).matchRemoved(matchToDelete);
+	}
 
 }

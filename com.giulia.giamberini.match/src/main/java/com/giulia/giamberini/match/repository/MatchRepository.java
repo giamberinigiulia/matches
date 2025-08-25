@@ -14,4 +14,6 @@ public interface MatchRepository {
 
 	void save(Match match);
 
+	void delete(Player winner, Player loser, LocalDate dateOfTheMatchToDelete);
+
 }

@@ -19,4 +19,6 @@ public interface MatchesView {
 
 	void showError(String string, Match matchAlreadyPresent);
 
+	void matchRemoved(Match matchToDelete);
+
 }

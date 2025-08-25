@@ -30,4 +30,8 @@ public class MatchController {
 		matchesView.matchAdded(match);
 	}
 
+	public void deleteMatch(Match matchToDelete) {
+		
+	}
+
 }
