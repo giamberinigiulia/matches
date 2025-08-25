@@ -31,7 +31,8 @@ public class MatchController {
 	}
 
 	public void deleteMatch(Match matchToDelete) {
-		
+		matchRepository.delete(matchToDelete.getWinner(), matchToDelete.getLoser(), matchToDelete.getDateOfTheMatch());
+		matchesView.matchRemoved(matchToDelete);
 	}
 
 }
