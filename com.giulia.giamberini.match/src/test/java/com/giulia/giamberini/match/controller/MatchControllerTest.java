@@ -98,5 +98,19 @@ public class MatchControllerTest {
 		inOrder.verify(matchRepository).delete(winner, loser, dateOfTheMatchToDelete);
 		inOrder.verify(matchesView).matchRemoved(matchToDelete);
 	}
+	
+	@Test
+	public void testDeleteANotExistingMatchShowsError() {
+		Player winner = new Player("1", "winner name", "winner surname");
+		Player loser = new Player("2", "loser name", "loser surname");
+		LocalDate dateOfTheMatchToDelete = LocalDate.of(2025, 07, 10);
+		Match matchToDelete = new Match(winner, loser, dateOfTheMatchToDelete);
+		
+		when(matchRepository.findByMatchInfo(winner, loser, dateOfTheMatchToDelete)).thenReturn(null);
+		matchController.deleteMatch(matchToDelete);
+		verify(matchesView).showError("No existing  match with selected winner, loser and date", matchToDelete);
+		verifyNoMoreInteractions(ignoreStubs(matchRepository));
+	}
+
 
 }
