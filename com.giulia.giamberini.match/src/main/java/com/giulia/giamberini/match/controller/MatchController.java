@@ -19,6 +19,13 @@ public class MatchController {
 	}
 
 	public void newMatch(Match match) {
+		Match existingMatch = matchRepository.findByMatchInfo(match.getWinner(), match.getLoser(),
+				match.getDateOfTheMatch());
+		if (existingMatch != null) {
+			matchesView.showError("Those players have already played against each other on the selected date",
+					existingMatch);
+			return;
+		}
 		matchRepository.save(match);
 		matchesView.matchAdded(match);
 	}
