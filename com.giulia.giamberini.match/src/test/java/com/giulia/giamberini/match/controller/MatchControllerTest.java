@@ -98,8 +98,11 @@ public class MatchControllerTest {
 		// Player A as loser on the date X selected. If this is true, the attempt to add
 		// a new match with Player A and Player B on the date X cannot be successful.
 		when(matchRepository.findByMatchInfo(winner, loser, dateOfTheMatch)).thenReturn(matchAlreadyPresent);
+		// explicitly set as null the mock for retrieving the exact pair of players
+		// intended to save as a new Match
+		when(matchRepository.findByMatchInfo(loser, winner, dateOfTheMatch)).thenReturn(null);
 		// for testing purposes the attempt will be to add the match on the other way
-		// araound, setting winner as loser and viceversa. This must be not successful
+		// around, setting winner as loser and viceversa. This must be not successful
 		Match newMatchToAdd = new Match(loser, winner, dateOfTheMatch);
 		matchController.newMatch(newMatchToAdd);
 		verify(matchesView).showError("Those players have already played against each other on the selected date",

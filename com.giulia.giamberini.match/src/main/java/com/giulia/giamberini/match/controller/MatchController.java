@@ -19,11 +19,17 @@ public class MatchController {
 	}
 
 	public void newMatch(Match match) {
-		Match existingMatch = matchRepository.findByMatchInfo(match.getWinner(), match.getLoser(),
+		Match existingMatchAsGiven = matchRepository.findByMatchInfo(match.getWinner(), match.getLoser(),
 				match.getDateOfTheMatch());
-		if (existingMatch != null) {
+		if (existingMatchAsGiven != null) {
 			matchesView.showError("Those players have already played against each other on the selected date",
-					existingMatch);
+					existingMatchAsGiven);
+			return;
+		}
+		Match existingMatchAsOppositeResult = matchRepository.findByMatchInfo(match.getLoser(), match.getWinner(), match.getDateOfTheMatch());
+		if (existingMatchAsOppositeResult != null) {
+			matchesView.showError("Those players have already played against each other on the selected date",
+					existingMatchAsOppositeResult);
 			return;
 		}
 		matchRepository.save(match);
