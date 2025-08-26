@@ -72,7 +72,7 @@ public class MatchControllerTest {
 	}
 
 	@Test
-	public void testNewMatchIsNotAddedIfPlayersHaveAlreadyPlayedAgainstEachOtherOnTheSameDate() {
+	public void testNewMatchIsNotAddedIfPlayersHaveAlreadyPlayedAgainstEachOtherOnTheSameDateAndTheResultIsTheSame() {
 		Player winner = new Player("1", "winner name", "winner surname");
 		Player loser = new Player("2", "loser name", "loser surname");
 		LocalDate dateOfTheMatch = LocalDate.of(2025, 07, 10);
