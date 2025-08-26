@@ -36,10 +36,9 @@ public class MatchRepositoryMongo implements MatchRepository {
 
 	@Override
 	public Match findByMatchInfo(Player winner, Player loser, LocalDate dateOfTheMatch) {
-		Document existingMatchDoc = matchCollection.find(and(eq("winnerId", winner.getId()), 
-															 eq("loserId", loser.getId()), 
-															 eq("date", dateOfTheMatch)))
-													.first();
+		Document existingMatchDoc = matchCollection
+				.find(and(eq("winnerId", winner.getId()), eq("loserId", loser.getId()), eq("date", dateOfTheMatch)))
+				.first();
 
 		if (existingMatchDoc != null) {
 			return fromDocumentToMatch(existingMatchDoc);
@@ -50,6 +49,8 @@ public class MatchRepositoryMongo implements MatchRepository {
 
 	@Override
 	public void save(Match match) {
+		matchCollection.insertOne(new Document("winnerId", match.getWinner().getId())
+				.append("loserId", match.getLoser().getId()).append("date", match.getDateOfTheMatch()));
 	}
 
 	@Override

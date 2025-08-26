@@ -130,5 +130,18 @@ public class MatchRepositoryMongoTest {
 	private Player fromDocumentToPlayer(Document d) {
 		return new Player(d.getString("_id"), d.getString("name"), d.getString("surname"));
 	}
+	
+	@Test
+	public void testDeleteMatchFromTheDatabase() {
+		Player winner = new Player("1", "winner name", "winner surname");
+		Player loser = new Player("2", "loser name", "loser surname");
+		insertPlayerInCollection(winner);
+		insertPlayerInCollection(loser);
+		LocalDate date = LocalDate.of(2025, 07, 10);
+		insertMatchInCollection(winner, loser, date);
+		matchRepository.delete(winner, loser, date);
+		assertThat(StreamSupport.stream(matchCollection.find().spliterator(), false).map(this::fromDocumentToMatch)
+				.collect(Collectors.toList())).isEmpty();
+	}
 
 }
