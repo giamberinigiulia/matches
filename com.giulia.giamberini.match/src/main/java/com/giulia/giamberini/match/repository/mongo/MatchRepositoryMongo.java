@@ -55,6 +55,7 @@ public class MatchRepositoryMongo implements MatchRepository {
 
 	@Override
 	public void delete(Player winner, Player loser, LocalDate dateOfTheMatchToDelete) {
+		matchCollection.deleteOne(and(eq("winnerId", winner.getId()), eq("loserId", loser.getId()), eq("date", dateOfTheMatchToDelete)));
 	}
 
 	private Match fromDocumentToMatch(Document d) {
